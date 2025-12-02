@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saga Echocardiography Learning Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* --- デザイン設定 (CSS) --- */
+        :root { --primary: #38bdf8; --secondary: #2563eb; --dark-bg: #0f172a; --card-bg: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; background-color: var(--dark-bg); color: white; overflow-x: hidden; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+
+        /* 背景エフェクト */
+        .bg-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%); }
+        .orb { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, rgba(0, 0, 0, 0) 70%); border-radius: 50%; top: -100px; right: -100px; animation: pulse 8s infinite alternate; pointer-events: none; }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 100% { transform: scale(1.2); opacity: 0.6; } }
+
+        /* ヘッダー */
+        header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; width: 90%; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; color: white; }
+        .logo i { color: var(--primary); margin-right: 8px; }
+
+        /* メインビジュアル */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin: 0 0 20px 0; font-weight: 700; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.05em; }
+        .subtitle { font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin-bottom: 40px; }
+
+        /* アニメーション */
+        .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.8s forwards; }
+        .delay-1 { animation-delay: 0.2s; } .delay-2 { animation-delay: 0.4s; } .delay-3 { animation-delay: 0.6s; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        /* ボタン */
+        .btn-glow { padding: 15px 40px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border: none; border-radius: 50px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(56, 189, 248, 0.7); }
+
+        /* カードセクション */
+        .section { padding: 100px 5%; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 1.5rem; margin-bottom: 40px; border-left: 4px solid var(--primary); padding-left: 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        .card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); transition: 0.3s; position: relative; overflow: hidden; }
+        .card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.5); background: rgba(255, 255, 255, 0.08); }
+        .card-icon { font-size: 2rem; color: var(--primary); margin-bottom: 20px; display: inline-block; }
+        .card h3 { margin: 0 0 10px 0; font-size: 1.3rem; }
+        .card p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px; }
+        
+        /* 埋め込み用エリア (Googleカレンダー等のプレースホルダー) */
+        .embed-container { position: relative; padding-bottom: 75%; height: 0; overflow: hidden; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); margin-top: 15px; }
+        .embed-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        /* フッター */
+        footer { text-align: center; padding: 50px 20px; color: #475569; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+    <div class="orb"></div>
+
+    <header>
+        <div class="logo"><i class="fa-solid fa-heart-pulse"></i> SAGA ECHO HUB</div>
+        </header>
+
+    <section class="hero">
+        <h1 class="fade-in">心エコーの未来を、<br>佐賀から拓く。</h1>
+        <p class="subtitle fade-in delay-1">
+            技術向上と知識の共有。<br>医師・技師がつながるための新しいラーニングハブ。
+        </p>
+        <div class="fade-in delay-2">
+            <button class="btn-glow" onclick="alert('Googleドライブの設定完了後に、ここにリンクを設定します。')">
+                <i class="fa-solid fa-lock"></i> 抄読会の部屋へ入室
+            </button>
+        </div>
+    </section>
+
+    <section class="section fade-in delay-3">
+        <div class="section-title">Latest Updates & Resources</div>
+        
+        <div class="grid">
+            <div class="card">
+                <i class="fa-regular fa-calendar-check card-icon"></i>
+                <h3>Web Meeting</h3>
+                <p>次回の勉強会予定</p>
+                <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:10px; text-align:center; font-size:0.9rem;">
+                    2025.12.20 (Sat) 19:00 - <br>
+                    <strong>「僧帽弁逆流の評価」</strong>
+                </div>
+            </div>
+
+            <div class="card">
+                <i class="fa-regular fa-file-pdf card-icon"></i>
+                <h3>Archive</h3>
+                <p>過去の議事録はクラウドに安全に保管されています。</p>
+                <a href="#" style="color:var(--primary); font-weight:bold;">アーカイブ一覧を見る →</a>
+            </div>
+
+            <div class="card">
+                <i class="fa-solid fa-pen-nib card-icon"></i>
+                <h3>Topics</h3>
+                <div style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px; margin-bottom:10px;">
+                    <span style="font-size:0.8rem; color:#64748b;">2025.12.02</span><br>
+                    Webサイトを開設しました。
+                </div>
+                <div style="padding-bottom:10px;">
+                    <span style="font-size:0.8rem; color:#64748b;">2025.11.20</span><br>
+                    第5回勉強会のレポートを公開。
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        &copy; 2025 Saga Echocardiography Learning Hub.<br>
+        Designed for Medical Professionals.
+    </footer>
+
+</body>
+</html>
