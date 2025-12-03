@@ -110,6 +110,7 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <script>
         // 1. 基本セットアップ
@@ -119,103 +120,107 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // 2. リアルな心臓形状の生成関数
-        function createHeartGeometry() {
+        // 共通マテリアル（点と線）
+        const particlesMaterial = new THREE.PointsMaterial({
+            color: 0x38bdf8, size: 0.05, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
+        });
+        const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x2563eb, transparent: true, opacity: 0.15 });
+
+        // グループ
+        const heartGroup = new THREE.Group();
+        scene.add(heartGroup);
+        heartGroup.position.set(5, -2, -5); 
+        heartGroup.rotation.y = -Math.PI / 4;
+
+        // カメラ位置
+        camera.position.z = 12;
+
+        // 2. モデル読み込みマネージャー
+        // まず「heart.glb」を探し、なければ「プログラム生成心臓」を作る
+        const loader = new THREE.GLTFLoader();
+        
+        // ★重要：ここで 'heart.glb' を読みに行きます
+        loader.load('./heart.glb', (gltf) => {
+            // 読み込み成功時
+            const loadedModel = gltf.scene;
+            
+            // モデルの全てのメッシュを「点と線」に変換する
+            loadedModel.traverse((child) => {
+                if (child.isMesh) {
+                    // ワイヤーフレーム追加
+                    const wireGeom = new THREE.WireframeGeometry(child.geometry);
+                    const wireframe = new THREE.LineSegments(wireGeom, wireframeMaterial);
+                    child.add(wireframe);
+                    
+                    // 点群追加
+                    const points = new THREE.Points(child.geometry, particlesMaterial);
+                    child.add(points);
+                    
+                    // 元の素材（ポリゴン）は隠す
+                    child.material.visible = false; 
+                }
+            });
+
+            // サイズ調整（モデルによって大きさが違うので適当に調整）
+            // バウンディングボックスを計算して正規化するのが理想ですが、簡易的にセット
+            loadedModel.scale.set(50, 50, 50); // ※外部モデルが小さい場合が多いので拡大
+            
+            heartGroup.add(loadedModel);
+            console.log("External heart.glb loaded successfully!");
+
+        }, undefined, (error) => {
+            // 読み込み失敗時（ファイルがない場合など） -> プログラム生成版を使う
+            console.log("heart.glb not found, using procedural generation.");
+            createProceduralHeart();
+        });
+
+        // (フォールバック用) プログラムで心臓を作る関数
+        function createProceduralHeart() {
             const geometry = new THREE.BufferGeometry();
             const vertices = [];
-            const numPoints = 2500; // 点の数を増やして密度アップ
-
+            const numPoints = 3000;
             for (let i = 0; i < numPoints; i++) {
-                // 球面座標ベースでランダムな点を生成
                 const phi = Math.acos( -1 + ( 2 * Math.random() ) );
                 const theta = Math.sqrt( numPoints * Math.PI ) * phi;
-
-                // 基本の球体座標
                 let x = Math.cos(theta) * Math.sin(phi);
                 let y = Math.sin(theta) * Math.sin(phi);
                 let z = Math.cos(phi);
-
-                // ★心臓の形への変形ロジック★
-                // 心尖部（下）を尖らせ、上部（心房）を膨らませる
                 
-                // y軸方向（上下）の変形：下に行くほど細くする
+                // 心臓変形ロジック
                 let stretch = 1.0 - (z * 0.5); 
-                x *= stretch * 1.2;
-                y *= stretch * 0.8; 
-                
-                // Z軸（高さ）を少し伸ばして縦長に
-                z *= 1.5;
-
-                // 上部のくぼみ（心基部）を作る
-                if (z > 0.5) {
-                    const indent = Math.abs(x) * 0.5;
-                    z -= indent * 0.5;
-                }
-
-                // ランダムなノイズを加えて「有機的」な不規則さを出す
+                x *= stretch * 1.2; y *= stretch * 0.8; z *= 1.5;
+                if (z > 0.5) { const indent = Math.abs(x) * 0.5; z -= indent * 0.5; }
                 const noise = 0.95 + Math.random() * 0.1;
-                
                 vertices.push(x * 3 * noise, y * 3 * noise, z * 3 * noise);
             }
-
             geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-            return geometry;
+            
+            const points = new THREE.Points(geometry, particlesMaterial);
+            // 生成版は向きを調整
+            points.rotation.x = -Math.PI / 2;
+            points.rotation.z = Math.PI / 10;
+            heartGroup.add(points);
         }
 
-        const heartGeometry = createHeartGeometry();
-
-        // 3. マテリアル（点と線の見た目）
-        const particlesMaterial = new THREE.PointsMaterial({
-            color: 0x38bdf8, // プライマリーカラー（水色）
-            size: 0.06,
-            transparent: true,
-            opacity: 0.6,
-            blending: THREE.AdditiveBlending
-        });
-        
-        const heartMesh = new THREE.Points(heartGeometry, particlesMaterial);
-        
-        // グループ化して配置
-        const heartGroup = new THREE.Group();
-        heartGroup.add(heartMesh);
-
-        // ★配置と向きの調整（心尖部が下）
-        heartGroup.rotation.x = -Math.PI / 2; // 手前に起こす
-        heartGroup.rotation.z = Math.PI / 10; // 少し傾ける（解剖学的軸）
-        
-        // 画面右下に配置
-        heartGroup.position.set(5, -2, -5); 
-
-        scene.add(heartGroup);
-
-        camera.position.z = 12;
-
-        // 4. アニメーション（ドックン・ドックン）
+        // 4. アニメーション
         let time = 0;
         function animate() {
             requestAnimationFrame(animate);
             time += 0.01;
-
-            // リアルな拍動リズム関数 (Easing)
+            
+            // 拍動
             let beat = 0;
-            const t = time % 1.5; // 1.5秒周期
-            if (t < 0.2) {
-                beat = Math.sin(t * Math.PI / 0.2) * 0.15; // 最初の収縮
-            } else if (t > 0.3 && t < 0.5) {
-                beat = Math.sin((t - 0.3) * Math.PI / 0.2) * 0.08; // 2回目の小さな収縮
-            }
-
-            // スケールに適用 (1.0 + 拍動分)
+            const t = time % 1.5;
+            if (t < 0.2) beat = Math.sin(t * Math.PI / 0.2) * 0.15;
+            else if (t > 0.3 && t < 0.5) beat = Math.sin((t - 0.3) * Math.PI / 0.2) * 0.08;
+            
             const scale = 1.0 + beat;
             heartGroup.scale.set(scale, scale, scale);
-
-            // ゆっくり回転
             heartGroup.rotation.y += 0.002;
 
             renderer.render(scene, camera);
         }
 
-        // リサイズ対応
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
