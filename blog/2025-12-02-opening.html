@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webサイトを開設しました | Saga Echocardiography Learning Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * { box-sizing: border-box; }
+        :root { --primary: #38bdf8; --secondary: #2563eb; --dark-bg: #0f172a; --card-bg: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; color: white; overflow-x: hidden; line-height: 1.8; background-color: var(--dark-bg); }
+        a { text-decoration: none; color: inherit; }
+
+        /* 背景設定（トップページと同じ） */
+        .bg-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -20; background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%); }
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -15; pointer-events: none; opacity: 0.5; /* 文字を読みやすくするため少し薄く */ }
+        .orb { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, rgba(0, 0, 0, 0) 70%); border-radius: 50%; top: -100px; right: -100px; animation: pulse 8s infinite alternate; pointer-events: none; z-index: -10; }
+
+        /* ヘッダー */
+        header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; top: 0; left: 0; width: 100%; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; color: white; }
+        .logo i { color: var(--primary); margin-right: 8px; }
+
+        /* 記事コンテナ */
+        .article-container {
+            max-width: 800px; margin: 120px auto 60px; padding: 40px;
+            background: rgba(15, 23, 42, 0.8); /* 読みやすくするための背景色 */
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .article-header { margin-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 20px; }
+        .article-date { color: var(--primary); font-size: 0.9rem; margin-bottom: 10px; display: block; }
+        h1 { font-size: 2rem; margin: 0; line-height: 1.4; }
+
+        .article-body { font-size: 1.05rem; color: #cbd5e1; }
+        .article-body h2 { color: white; border-left: 4px solid var(--primary); padding-left: 15px; margin-top: 40px; margin-bottom: 20px; font-size: 1.5rem; }
+        .article-body p { margin-bottom: 20px; }
+
+        /* 戻るボタン */
+        .back-btn { display: inline-block; margin-top: 40px; padding: 10px 20px; border: 1px solid rgba(255,255,255,0.2); border-radius: 30px; transition: 0.3s; font-size: 0.9rem; }
+        .back-btn:hover { background: white; color: var(--dark-bg); }
+
+        footer { text-align: center; padding: 50px 20px; color: #475569; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body>
+
+    <div class="bg-gradient"></div>
+    <div id="canvas-container"></div> <div class="orb"></div>
+
+    <header>
+        <a href="../index.html" class="logo"><i class="fa-solid fa-heart-pulse"></i> SAGA ECHO HUB</a>
+    </header>
+
+    <article class="article-container">
+        <div class="article-header">
+            <span class="article-date">2025.12.02</span>
+            <h1>佐賀県心エコーラーニングハブ Webサイトを開設しました</h1>
+        </div>
+
+        <div class="article-body">
+            <p>はじめまして。佐賀大学循環器内科の[お名前]です。</p>
+            <p>この度、佐賀県内の心エコー図検査の技術向上と、施設間の情報共有を目的として、本Webサイト「Saga Echocardiography Learning Hub」を立ち上げました。</p>
+
+            <h2>本サイトの目的</h2>
+            <p>日常臨床で遭遇する判断に迷う症例の共有や、最新のガイドライン・論文の抄読会資料などをアーカイブ化し、いつでも学べる環境を提供したいと考えています。</p>
+
+            <h2>今後の予定</h2>
+            <p>定期的なWebミーティングの案内や、議事録の更新を行ってまいります。皆様のご参加を心よりお待ちしております。</p>
+        </div>
+
+        <a href="../index.html" class="back-btn"><i class="fa-solid fa-arrow-left"></i> TOPページに戻る</a>
+    </article>
+
+    <footer>
+        &copy; 2025 Saga Echocardiography Learning Hub.
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script>
+        // --- 簡易版3D背景スクリプト (記事ページ用) ---
+        // ※記事が読みやすいよう、アニメーション等は少し控えめに設定しています
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        const particlesMaterial = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.05, transparent: true, opacity: 0.4, blending: THREE.AdditiveBlending });
+        const heartGroup = new THREE.Group();
+        scene.add(heartGroup);
+        heartGroup.position.set(6, -3, -10); // 記事の邪魔にならないよう右奥に配置
+        heartGroup.rotation.y = -Math.PI / 4;
+        camera.position.z = 15;
+
+        // 生成ロジックのみ使用（読み込みエラー回避のため）
+        const geometry = new THREE.BufferGeometry();
+        const vertices = [];
+        const numPoints = 2000;
+        for (let i = 0; i < numPoints; i++) {
+            const phi = Math.acos( -1 + ( 2 * Math.random() ) );
+            const theta = Math.sqrt( numPoints * Math.PI ) * phi;
+            let x = Math.cos(theta) * Math.sin(phi); let y = Math.sin(theta) * Math.sin(phi); let z = Math.cos(phi);
+            let stretch = 1.0 - (z * 0.5); x *= stretch * 1.2; y *= stretch * 0.8; z *= 1.5;
+            if (z > 0.5) { const indent = Math.abs(x) * 0.5; z -= indent * 0.5; }
+            const noise = 0.95 + Math.random() * 0.1;
+            vertices.push(x * 3 * noise, y * 3 * noise, z * 3 * noise);
+        }
+        geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+        const points = new THREE.Points(geometry, particlesMaterial);
+        points.rotation.x = -Math.PI / 2; points.rotation.z = Math.PI / 10;
+        heartGroup.add(points);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            heartGroup.rotation.y += 0.001; // ゆったり回転のみ
+            renderer.render(scene, camera);
+        }
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+        animate();
+    </script>
+</body>
+</html>
