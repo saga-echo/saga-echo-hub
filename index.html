@@ -8,73 +8,42 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* 全要素のサイズ計算統一 */
         * { box-sizing: border-box; }
-
-        /* 基本設定 */
         :root { --primary: #38bdf8; --secondary: #2563eb; --dark-bg: #0f172a; --card-bg: rgba(255, 255, 255, 0.05); }
         body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; color: white; overflow-x: hidden; line-height: 1.6; position: relative; background-color: var(--dark-bg); }
         a { text-decoration: none; color: inherit; }
 
-        /* --- 背景レイヤー設定 --- */
-        /* 1. グラデーション背景 (一番奥) */
         .bg-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -20; background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%); }
-
-        /* 2. Three.js用のコンテナ (その手前：ここに3Dが描画される) */
-        #canvas-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -15; pointer-events: none;
-            opacity: 0.8; /* 3Dモデルの存在感を調整 */
-        }
-
-        /* 3. 動くオーブ (最前面の背景) */
+        #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -15; pointer-events: none; opacity: 0.8; }
         .orb { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, rgba(0, 0, 0, 0) 70%); border-radius: 50%; top: -100px; right: -100px; animation: pulse 8s infinite alternate; pointer-events: none; z-index: -10; }
         @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 100% { transform: scale(1.2); opacity: 0.6; } }
 
-        /* ヘッダー */
         header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; top: 0; left: 0; width: 100%; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .logo { font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.2rem; letter-spacing: 1px; color: white; }
         .logo i { color: var(--primary); margin-right: 8px; }
 
-        /* メインビジュアル */
         .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 20px 0; position: relative; }
         h1 { font-size: clamp(2.5rem, 5vw, 4rem); margin: 0 0 20px 0; font-weight: 700; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -0.05em; }
         .subtitle { font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin-bottom: 40px; }
-
-        /* アニメーション */
         .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.8s forwards; }
         .delay-1 { animation-delay: 0.2s; } .delay-2 { animation-delay: 0.4s; } .delay-3 { animation-delay: 0.6s; }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        /* ボタン */
         .btn-glow { padding: 15px 40px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border: none; border-radius: 50px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; }
         .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(56, 189, 248, 0.7); }
 
-        /* セクション共通 */
         .section { padding: 60px 5%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 1.5rem; margin-bottom: 30px; border-left: 4px solid var(--primary); padding-left: 15px; display: flex; align-items: center; gap: 10px; }
-        
-        /* カレンダーセクション */
         .calendar-section { width: 100%; margin-bottom: 40px; }
-        .calendar-container {
-            position: relative; width: 100%; height: 600px;
-            border-radius: 20px; overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .google-calendar {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
-            filter: invert(1) hue-rotate(180deg) contrast(0.9) saturate(0.8);
-        }
+        .calendar-container { position: relative; width: 100%; height: 600px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .google-calendar { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; filter: invert(1) hue-rotate(180deg) contrast(0.9) saturate(0.8); }
 
-        /* 下部のグリッド */
         .grid-2-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
         .card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); transition: 0.3s; position: relative; overflow: hidden; height: 100%; }
         .card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.5); background: rgba(255, 255, 255, 0.08); }
         .card-icon { font-size: 2rem; color: var(--primary); margin-bottom: 20px; display: inline-block; }
         .card h3 { margin: 0 0 10px 0; font-size: 1.3rem; }
         .card p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px; }
-        
-        /* フッター */
         footer { text-align: center; padding: 50px 20px; color: #475569; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
@@ -94,7 +63,7 @@
             技術向上と知識の共有。<br>医師・技師がつながるための新しいラーニングハブ。
         </p>
         <div class="fade-in delay-2">
-            <a href="https://drive.google.com/drive/folders/1rwDZwNR4aGwF_JUzrZm5EmjTjWa39uWy?usp=drive_link" target="_blank" class="btn-glow">
+            <a href="https://drive.google.com/drive/folders/1rwDZwNR4aGwF_JUzrZm5EmjTjWa39uWy" target="_blank" class="btn-glow">
                 <i class="fa-solid fa-lock"></i> 抄読会の部屋へ入室 🔒
             </a>
         </div>
@@ -114,7 +83,7 @@
                 <h3>Archive</h3>
                 <p>過去の議事録・資料アーカイブ</p>
                 <div style="margin-top:20px;">
-                    <a href="https://drive.google.com/drive/folders/1Ma9YP9mtl5WAPd7nxfMdmD344eaJsha6?usp=drive_link" target="_blank" style="color:var(--primary); font-weight:bold; display:flex; align-items:center; gap:5px;">
+                    <a href="https://drive.google.com/drive/folders/1Ma9YP9mtl5WAPd7nxfMdmD344eaJsha6" target="_blank" style="color:var(--primary); font-weight:bold; display:flex; align-items:center; gap:5px;">
                         アーカイブ一覧へ <i class="fa-solid fa-arrow-right"></i>
                     </a>
                 </div>
@@ -141,98 +110,112 @@
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <script>
-        // 1. シーン、カメラ、レンダラーの準備
+        // 1. 基本セットアップ
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // 2. ライティング（点と線を光らせるため）
-        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0x38bdf8, 1, 100);
-        pointLight.position.set(10, 10, 10);
-        scene.add(pointLight);
+        // 2. リアルな心臓形状の生成関数
+        function createHeartGeometry() {
+            const geometry = new THREE.BufferGeometry();
+            const vertices = [];
+            const numPoints = 2500; // 点の数を増やして密度アップ
 
-        // 3. 外部のリアルな心臓3Dモデルをロード
-        // ※今回は私が用意したリアルな心臓のGLTFモデルを使用します。
-        // ※心尖部が下になるように調整済みのモデルです。
-        const loader = new THREE.GLTFLoader();
-        let heartModel;
-        let mixer; // アニメーションミキサー
+            for (let i = 0; i < numPoints; i++) {
+                // 球面座標ベースでランダムな点を生成
+                const phi = Math.acos( -1 + ( 2 * Math.random() ) );
+                const theta = Math.sqrt( numPoints * Math.PI ) * phi;
 
-        // モデルのURL（私がホストしている公開URL）
-        const modelUrl = 'https://raw.githubusercontent.com/EchoHub-Saga/assets/main/realistic_heart_wireframe_beating.glb';
+                // 基本の球体座標
+                let x = Math.cos(theta) * Math.sin(phi);
+                let y = Math.sin(theta) * Math.sin(phi);
+                let z = Math.cos(phi);
 
-        loader.load(modelUrl, (gltf) => {
-            heartModel = gltf.scene;
+                // ★心臓の形への変形ロジック★
+                // 心尖部（下）を尖らせ、上部（心房）を膨らませる
+                
+                // y軸方向（上下）の変形：下に行くほど細くする
+                let stretch = 1.0 - (z * 0.5); 
+                x *= stretch * 1.2;
+                y *= stretch * 0.8; 
+                
+                // Z軸（高さ）を少し伸ばして縦長に
+                z *= 1.5;
 
-            // マテリアルを「点と線」に変更
-            const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x2563eb, transparent: true, opacity: 0.2 });
-            const pointsMaterial = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.08, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
-
-            heartModel.traverse((child) => {
-                if (child.isMesh) {
-                    // 元の形状からワイヤーフレームを生成
-                    const wireframeGeometry = new THREE.WireframeGeometry(child.geometry);
-                    const wireframe = new THREE.LineSegments(wireframeGeometry, wireframeMaterial);
-                    child.add(wireframe);
-
-                    // 元の形状から点を生成
-                    const points = new THREE.Points(child.geometry, pointsMaterial);
-                    child.add(points);
-
-                    // 元のメッシュは非表示にする（点と線だけ見せるため）
-                    child.material.visible = false;
+                // 上部のくぼみ（心基部）を作る
+                if (z > 0.5) {
+                    const indent = Math.abs(x) * 0.5;
+                    z -= indent * 0.5;
                 }
-            });
 
-            // 位置とサイズの調整
-            heartModel.scale.set(2.5, 2.5, 2.5);
-            heartModel.position.set(4, -2, -5); // 右下に配置
-            heartModel.rotation.y = -Math.PI / 4; // 少し斜めに向ける
-
-            scene.add(heartModel);
-
-            // 拍動アニメーションの準備（モデルに含まれている場合）
-            if (gltf.animations && gltf.animations.length) {
-                mixer = new THREE.AnimationMixer(heartModel);
-                const action = mixer.clipAction(gltf.animations[0]); // 最初のアニメーションを使用
-                action.timeScale = 0.8; // 少しゆっくりにする
-                action.play();
+                // ランダムなノイズを加えて「有機的」な不規則さを出す
+                const noise = 0.95 + Math.random() * 0.1;
+                
+                vertices.push(x * 3 * noise, y * 3 * noise, z * 3 * noise);
             }
 
-        }, undefined, (error) => {
-            console.error('An error happened:', error);
+            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+            return geometry;
+        }
+
+        const heartGeometry = createHeartGeometry();
+
+        // 3. マテリアル（点と線の見た目）
+        const particlesMaterial = new THREE.PointsMaterial({
+            color: 0x38bdf8, // プライマリーカラー（水色）
+            size: 0.06,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
         });
+        
+        const heartMesh = new THREE.Points(heartGeometry, particlesMaterial);
+        
+        // グループ化して配置
+        const heartGroup = new THREE.Group();
+        heartGroup.add(heartMesh);
 
-        // カメラ位置
-        camera.position.z = 10;
+        // ★配置と向きの調整（心尖部が下）
+        heartGroup.rotation.x = -Math.PI / 2; // 手前に起こす
+        heartGroup.rotation.z = Math.PI / 10; // 少し傾ける（解剖学的軸）
+        
+        // 画面右下に配置
+        heartGroup.position.set(5, -2, -5); 
 
-        // 4. アニメーションループ
-        const clock = new THREE.Clock();
+        scene.add(heartGroup);
+
+        camera.position.z = 12;
+
+        // 4. アニメーション（ドックン・ドックン）
+        let time = 0;
         function animate() {
             requestAnimationFrame(animate);
-            const delta = clock.getDelta(); // 前フレームからの経過時間
+            time += 0.01;
 
-            // モデルがロードされていれば、ミキサーを更新して拍動させる
-            if (mixer) {
-                mixer.update(delta);
+            // リアルな拍動リズム関数 (Easing)
+            let beat = 0;
+            const t = time % 1.5; // 1.5秒周期
+            if (t < 0.2) {
+                beat = Math.sin(t * Math.PI / 0.2) * 0.15; // 最初の収縮
+            } else if (t > 0.3 && t < 0.5) {
+                beat = Math.sin((t - 0.3) * Math.PI / 0.2) * 0.08; // 2回目の小さな収縮
             }
 
-            // ゆっくりと回転させる（オプション）
-            if (heartModel) {
-                heartModel.rotation.y -= 0.001;
-            }
+            // スケールに適用 (1.0 + 拍動分)
+            const scale = 1.0 + beat;
+            heartGroup.scale.set(scale, scale, scale);
+
+            // ゆっくり回転
+            heartGroup.rotation.y += 0.002;
 
             renderer.render(scene, camera);
         }
 
-        // 5. ウィンドウサイズ変更への対応
+        // リサイズ対応
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
