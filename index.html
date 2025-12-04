@@ -6,12 +6,10 @@
     <title>SAKE | Saga Association for Knowledge of Echocardiography</title>
     
     <meta name="google-site-verification" content="1nurx5SIjv1gPJDoIUVk-IElgiLxtBJVdUlJ4emsU9E" />
-    
-    <meta name="description" content="SAKE (Saga Association for Knowledge of Echocardiography) は、佐賀県内の循環器内科医・技師のための心エコー学習・情報共有プラットフォームです。技術向上と知識の共有を目指します。">
+    <meta name="description" content="SAKE (Saga Association for Knowledge of Echocardiography) は、佐賀県内の循環器内科医・技師のための心エコー学習・情報共有プラットフォームです。">
     <meta name="keywords" content="SAKE,佐賀,心エコー,循環器,超音波検査,Saga,Echocardiography,勉強会">
-
     <meta property="og:title" content="SAKE | 佐賀心エコー知識協会">
-    <meta property="og:description" content="心エコーの未来を、佐賀から拓く。SAKE (Saga Association for Knowledge of Echocardiography)">
+    <meta property="og:description" content="心エコーの未来を、佐賀から拓く。SAKE">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://saga-echo.github.io/sake/">
 
@@ -31,10 +29,13 @@
 
         header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; top: 0; left: 0; width: 100%; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
         
-        /* ロゴ設定（アイコン＋文字） */
         .logo { display: flex; align-items: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; color: white; }
-        /* 一升瓶アイコンのSVG設定 */
-        .sake-icon { width: 40px; height: 40px; margin-right: 10px; fill: var(--primary); }
+        /* 画像アイコンの設定 */
+        .sake-icon-img { 
+            width: 40px; height: auto; margin-right: 15px; 
+            /* もし黒いアイコンを白くしたい場合は以下のフィルターを有効にしてください */
+            /* filter: invert(1); */ 
+        }
 
         .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 20px 0; position: relative; }
         h1 { font-family: 'Montserrat', sans-serif; font-size: clamp(4rem, 10vw, 8rem); margin: 0; font-weight: 700; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.05em; line-height: 1.1; }
@@ -71,10 +72,7 @@
 
     <header>
         <div class="logo">
-            <svg class="sake-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                <path d="M128 64V32c0-17.7 14.3-32 32-32h64c17.7 0 32 14.3 32 32v32c17.7 0 32 14.3 32 32v96c0 17.7-14.3 32-32 32h-16c-8.8 0-16 7.2-16 16v240c0 17.7-14.3 32-32 32H160c-17.7 0-32-14.3-32-32V256c0-8.8-7.2-16-16-16H96c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32h32zm32 64h64V96h-64v32zm96 352V256H128v224h128z"/>
-                <path d="M416 224h-64c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32h64c17.7 0 32-14.3 32-32v-64c0-17.7-14.3-32-32-32zm0 96h-64v-64h64v64z" opacity="0.6"/>
-            </svg>
+            <img src="./images/sake-logo.png" alt="SAKE Logo" class="sake-icon-img">
             SAKE
         </div>
     </header>
@@ -139,57 +137,43 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
     <script>
-        // 1. 基本セットアップ
+        // ... (JavaScript部分は前回と同じ心臓のコードのままです) ...
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        // 共通マテリアル
         const particlesMaterial = new THREE.PointsMaterial({
             color: 0x38bdf8, size: 0.05, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
         });
         const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x2563eb, transparent: true, opacity: 0.15 });
 
-        // グループ
         const heartGroup = new THREE.Group();
         scene.add(heartGroup);
         heartGroup.position.set(5, -2, -5); 
         heartGroup.rotation.y = -Math.PI / 4;
-
-        // カメラ位置
         camera.position.z = 18;
 
-        // 2. モデル読み込みマネージャー
         const loader = new THREE.GLTFLoader();
-        
         loader.load('./heart.glb', (gltf) => {
             const loadedModel = gltf.scene;
-            
             loadedModel.traverse((child) => {
                 if (child.isMesh) {
                     const wireGeom = new THREE.WireframeGeometry(child.geometry);
                     const wireframe = new THREE.LineSegments(wireGeom, wireframeMaterial);
                     child.add(wireframe);
-                    
                     const points = new THREE.Points(child.geometry, particlesMaterial);
                     child.add(points);
-                    
                     child.material.visible = false; 
                 }
             });
-
             loadedModel.scale.set(15, 15, 15);
             heartGroup.add(loadedModel);
-            console.log("External heart.glb loaded successfully!");
-
         }, undefined, (error) => {
-            console.log("heart.glb not found, using procedural generation.");
             createProceduralHeart();
         });
 
-        // (フォールバック用) プログラムで心臓を作る関数
         function createProceduralHeart() {
             const geometry = new THREE.BufferGeometry();
             const vertices = [];
@@ -200,7 +184,6 @@
                 let x = Math.cos(theta) * Math.sin(phi);
                 let y = Math.sin(theta) * Math.sin(phi);
                 let z = Math.cos(phi);
-                
                 let stretch = 1.0 - (z * 0.5); 
                 x *= stretch * 1.2; y *= stretch * 0.8; z *= 1.5;
                 if (z > 0.5) { const indent = Math.abs(x) * 0.5; z -= indent * 0.5; }
@@ -208,34 +191,25 @@
                 vertices.push(x * 3 * noise, y * 3 * noise, z * 3 * noise);
             }
             geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-            
             const points = new THREE.Points(geometry, particlesMaterial);
             points.rotation.x = -Math.PI / 2;
             points.rotation.z = Math.PI / 10;
             heartGroup.add(points);
         }
 
-        // 4. アニメーション
         const clock = new THREE.Clock(); 
-
         function animate() {
             requestAnimationFrame(animate);
-            
             const elapsedTime = clock.getElapsedTime(); 
             const period = 2.0; 
             const t = elapsedTime % period; 
             let beat = 0;
-
-            if (t < 0.4) {
-                beat = Math.sin(t * Math.PI / 0.4) * 0.15;
-            } else {
-                beat = 0;
-            }
+            if (t < 0.4) { beat = Math.sin(t * Math.PI / 0.4) * 0.15; }
+            else { beat = 0; }
             
             const scale = 1.0 + beat;
             heartGroup.scale.set(scale, scale, scale);
             heartGroup.rotation.y += 0.002;
-
             renderer.render(scene, camera);
         }
 
@@ -244,7 +218,6 @@
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
         animate();
     </script>
 
