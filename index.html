@@ -63,17 +63,13 @@
 
         .full-name { font-size: clamp(1rem, 2vw, 1.3rem); color: #cbd5e1; font-weight: 300; margin-bottom: 20px; letter-spacing: 0.05em; line-height: 1.5; }
         
-        /* ★変更点：Echocardiographyをさらに強力に強調 */
         .highlight-echo { 
-            color: var(--gold-highlight); /* ゴールド色に変更 */
-            font-weight: 800; /* より太く */
-            font-size: 1.2em; /* 周囲より大きく */
-            display: inline-block; /* transformを効かせるため */
-            transform: scale(1.05); /* 少し拡大 */
-            /* 強力な二重の発光エフェクト */
-            text-shadow: 
-                0 0 20px rgba(251, 191, 36, 0.6),
-                0 0 40px rgba(251, 191, 36, 0.4);
+            color: var(--gold-highlight); 
+            font-weight: 800; 
+            font-size: 1.2em; 
+            display: inline-block; 
+            transform: scale(1.05); 
+            text-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4);
         }
 
         .subtitle { font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin-bottom: 40px; }
@@ -90,6 +86,23 @@
 
         .section { padding: 60px 5%; max-width: 1200px; margin: 0 auto; }
         .section-title { font-size: 1.5rem; margin-bottom: 30px; border-left: 4px solid var(--primary); padding-left: 15px; display: flex; align-items: center; gap: 10px; }
+        
+        /* 動画埋め込みエリア */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            background: black;
+            margin-bottom: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .video-wrapper iframe {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0;
+        }
+
         .calendar-section { width: 100%; margin-bottom: 40px; }
         .calendar-container { position: relative; width: 100%; height: 600px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         .google-calendar { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; filter: invert(1) hue-rotate(180deg) contrast(0.9) saturate(0.8); }
@@ -118,7 +131,6 @@
 
     <section class="hero">
         <h1 class="fade-in">SAKE</h1>
-        
         <div class="ecg-divider fade-in delay-1"></div>
         
         <div class="full-name fade-in delay-1">
@@ -132,13 +144,32 @@
         
         <div class="hero-buttons fade-in delay-2">
             <a href="https://drive.google.com/drive/folders/1rwDZwNR4aGwF_JUzrZm5EmjTjWa39uWy" target="_blank" class="btn-glow">
-                <i class="fa-solid fa-lock"></i> 抄読会の部屋へ入室 🔒
+                <i class="fa-solid fa-lock"></i> 抄読会資料の部屋
             </a>
             
             <a href="https://script.google.com/macros/s/AKfycbzH_RcZeKN1_QjeyXo95ehigXVyi_hZAL3kNJHGfBWWBMagKvaa4zy9FzxyW3FHcb0u/exec" target="_blank" class="btn-glow secondary">
                 <i class="fa-solid fa-square-poll-vertical"></i> LVEF回答フォーム
             </a>
         </div>
+    </section>
+
+    <section class="section fade-in delay-3" id="journal-club">
+        <div class="section-title"><i class="fa-solid fa-video"></i> Online Journal Club</div>
+        
+        <h3 style="text-align:center; margin-bottom:20px; font-size:1.3rem; color:white;">
+            今月のオンライン抄読会
+        </h3>
+
+        <div class="video-wrapper">
+            <iframe src="https://drive.google.com/file/d/1lXu8KORXjwf1p5bx02-dwm0Bm8_xkSbQ/preview" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        </div>
+        
+        <p style="text-align:center; color:#cbd5e1; font-size:0.9rem; margin-top:20px; line-height:1.8;">
+            <i class="fa-solid fa-book-open"></i> Reference Article:<br>
+            <a href="https://www.ahajournals.org/doi/10.1161/JAHA.125.042875" target="_blank" style="color:var(--primary); text-decoration:underline; font-weight:bold;">
+                JAHA.125.042875 (Click to open)
+            </a>
+        </p>
     </section>
 
     <section class="section fade-in delay-3" id="schedule">
