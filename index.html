@@ -4,19 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAKE | Saga Association for Knowledge of Echocardiography</title>
-    
     <meta name="google-site-verification" content="1nurx5SIjv1gPJDoIUVk-IElgiLxtBJVdUlJ4emsU9E" />
-    <meta name="description" content="SAKE (Saga Association for Knowledge of Echocardiography) は、佐賀県内の循環器内科医・技師のための心エコー学習・情報共有プラットフォームです。">
-    <meta name="keywords" content="SAKE,佐賀,心エコー,循環器,超音波検査,Saga,Echocardiography,勉強会">
-    <meta property="og:title" content="SAKE | 佐賀心エコー知識協会">
-    <meta property="og:description" content="心エコーの未来を、佐賀から拓く。SAKE">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://saga-echo.github.io/sake/">
-
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* v27までのCSSをベースに、さらに整理 */
         * { box-sizing: border-box; }
         :root { --primary: #38bdf8; --secondary: #2563eb; --dark-bg: #0f172a; --card-bg: rgba(255, 255, 255, 0.05); --gold-highlight: #fbbf24; }
         body { margin: 0; padding: 0; font-family: 'Noto Sans JP', sans-serif; color: white; overflow-x: hidden; line-height: 1.6; position: relative; background-color: var(--dark-bg); }
@@ -26,97 +19,52 @@
         .bg-gradient { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -20; background: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%); }
         #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -15; pointer-events: none; opacity: 0.8; }
         .orb { position: absolute; width: 600px; height: 600px; background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, rgba(0, 0, 0, 0) 70%); border-radius: 50%; top: -100px; right: -100px; animation: pulse 8s infinite alternate; pointer-events: none; z-index: -10; }
-        @keyframes pulse { 0% { transform: scale(1); opacity: 0.3; } 100% { transform: scale(1.2); opacity: 0.6; } }
 
-        header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); position: fixed; top: 0; left: 0; width: 100%; z-index: 100; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        
+        header { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; }
         .logo { display: flex; align-items: center; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: 2px; color: white; }
         .sake-icon-img { width: 40px; height: auto; margin-right: 15px; }
 
-        .hero { min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 100px 20px 0; position: relative; }
-        
-        h1 { 
-            font-family: 'Montserrat', sans-serif; 
-            font-size: clamp(4rem, 10vw, 8rem); 
-            margin: 0; 
-            font-weight: 700; 
-            background: linear-gradient(90deg, #38bdf8 0%, #ffffff 50%, #38bdf8 100%); 
-            background-size: 200% auto;
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-            letter-spacing: 0.05em; 
-            line-height: 1.1; 
-            animation: shine 3s linear infinite;
-        }
+        .hero { min-height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 60px 20px; position: relative; }
+        h1 { font-family: 'Montserrat', sans-serif; font-size: clamp(4rem, 10vw, 8rem); margin: 0; font-weight: 700; background: linear-gradient(90deg, #38bdf8 0%, #ffffff 50%, #38bdf8 100%); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.05em; line-height: 1.1; animation: shine 3s linear infinite; }
         @keyframes shine { to { background-position: 200% center; } }
 
-        .ecg-divider {
-            width: 100%; max-width: 600px; height: 2px; background: rgba(255,255,255,0.1); margin: 20px 0; position: relative;
-            display: flex; justify-content: center; align-items: center;
-        }
-        .ecg-divider::before {
-            content: '\f21e';
-            font-family: "Font Awesome 6 Free"; font-weight: 900;
-            color: var(--primary); font-size: 1.5rem; background: var(--dark-bg); padding: 0 15px;
-            text-shadow: 0 0 10px var(--primary);
-        }
+        .ecg-divider { width: 100%; max-width: 600px; height: 2px; background: rgba(255,255,255,0.1); margin: 20px 0; position: relative; display: flex; justify-content: center; align-items: center; }
+        .ecg-divider::before { content: '\f21e'; font-family: "Font Awesome 6 Free"; font-weight: 900; color: var(--primary); font-size: 1.5rem; background: var(--dark-bg); padding: 0 15px; text-shadow: 0 0 10px var(--primary); }
 
         .full-name { font-size: clamp(1rem, 2vw, 1.3rem); color: #cbd5e1; font-weight: 300; margin-bottom: 20px; letter-spacing: 0.05em; line-height: 1.5; }
-        
-        .highlight-echo { 
-            color: var(--gold-highlight); 
-            font-weight: 800; 
-            font-size: 1.2em; 
-            display: inline-block; 
-            transform: scale(1.05); 
-            text-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4);
-        }
-
+        .highlight-echo { color: var(--gold-highlight); font-weight: 800; font-size: 1.2em; display: inline-block; transform: scale(1.05); text-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 40px rgba(251, 191, 36, 0.4); }
         .subtitle { font-size: 1.1rem; color: #94a3b8; max-width: 600px; margin-bottom: 40px; }
-        
+
         .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 0.8s forwards; }
-        .delay-1 { animation-delay: 0.2s; } .delay-2 { animation-delay: 0.4s; } .delay-3 { animation-delay: 0.6s; }
+        .delay-1 { animation-delay: 0.2s; } .delay-2 { animation-delay: 0.4s; }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
 
-        .hero-buttons { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 10px; }
-        .btn-glow { padding: 15px 30px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border: none; border-radius: 50px; color: white; font-weight: bold; cursor: pointer; box-shadow: 0 0 20px rgba(56, 189, 248, 0.4); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; text-decoration: none; }
-        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 0 30px rgba(56, 189, 248, 0.7); }
-        .btn-glow.secondary { background: linear-gradient(90deg, #ec4899, #8b5cf6); box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
-        .btn-glow.secondary:hover { box-shadow: 0 0 30px rgba(236, 72, 153, 0.7); }
-
-        .section { padding: 60px 5%; max-width: 1200px; margin: 0 auto; }
-        .section-title { font-size: 1.5rem; margin-bottom: 30px; border-left: 4px solid var(--primary); padding-left: 15px; display: flex; align-items: center; gap: 10px; }
+        /* ナビゲーションカード（新デザイン） */
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; width: 100%; max-width: 1000px; margin: 0 auto 60px; padding: 0 20px; }
         
-        /* 動画埋め込みエリア（動画タグ用に調整） */
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            /* 高さ制限を撤廃し、アスペクト比を自動維持 */
-            max-width: 900px;
-            margin: 0 auto 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            background: black;
-            border: 1px solid rgba(255,255,255,0.1);
-            overflow: hidden;
+        .nav-card {
+            background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); padding: 25px; border-radius: 15px;
+            backdrop-filter: blur(10px); transition: 0.3s; display: flex; flex-direction: column; align-items: center; text-align: center; text-decoration: none; color: white;
         }
-        /* videoタグそのもののスタイル */
-        .video-wrapper video {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
+        .nav-card:hover { transform: translateY(-5px); background: rgba(255, 255, 255, 0.1); border-color: var(--primary); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .nav-icon { font-size: 2.5rem; color: var(--primary); margin-bottom: 15px; }
+        .nav-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; }
+        .nav-desc { font-size: 0.9rem; color: #94a3b8; }
+        
+        /* 特別なカード（ジャーナルクラブ） */
+        .nav-card.featured { border-color: var(--gold-highlight); background: rgba(251, 191, 36, 0.05); }
+        .nav-card.featured .nav-icon { color: var(--gold-highlight); }
 
-        .calendar-section { width: 100%; margin-bottom: 40px; }
-        .calendar-container { position: relative; width: 100%; height: 600px; border-radius: 20px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .google-calendar { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; filter: invert(1) hue-rotate(180deg) contrast(0.9) saturate(0.8); }
+        /* カレンダーとTopicのレイアウト調整 */
+        .content-section { padding: 0 5% 60px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        @media (max-width: 900px) { .content-section { grid-template-columns: 1fr; } }
 
-        .grid-2-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
-        .card { background: var(--card-bg); border: 1px solid rgba(255, 255, 255, 0.1); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); transition: 0.3s; position: relative; overflow: hidden; height: 100%; }
-        .card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.5); background: rgba(255, 255, 255, 0.08); }
-        .card-icon { font-size: 2rem; color: var(--primary); margin-bottom: 20px; display: inline-block; }
-        .card h3 { margin: 0 0 10px 0; font-size: 1.3rem; }
-        .card p { color: #94a3b8; font-size: 0.95rem; margin-bottom: 20px; }
+        .widget-box { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; }
+        .widget-title { font-size: 1.2rem; margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px; display: flex; align-items: center; gap: 10px; }
+        
+        .calendar-wrapper { position: relative; padding-bottom: 75%; height: 0; overflow: hidden; border-radius: 10px; }
+        .calendar-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; filter: invert(1) hue-rotate(180deg) contrast(0.9) saturate(0.8); }
+
         footer { text-align: center; padding: 50px 20px; color: #475569; font-size: 0.8rem; border-top: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
@@ -128,192 +76,91 @@
 
     <header>
         <div class="logo">
-            <img src="images/sake-logo.png" alt="SAKE Logo" class="sake-icon-img">
-            SAKE
+            <img src="images/sake-logo.png" alt="SAKE Logo" class="sake-icon-img"> SAKE
         </div>
     </header>
 
     <section class="hero">
         <h1 class="fade-in">SAKE</h1>
         <div class="ecg-divider fade-in delay-1"></div>
-        
-        <div class="full-name fade-in delay-1">
-            Saga Association for Knowledge of <br>
-            <span class="highlight-echo">Echocardiography</span>
-        </div>
-        
-        <p class="subtitle fade-in delay-1">
-            心エコーの未来を、佐賀から拓く。<br>医師・技師がつながるためのラーニングハブ。
-        </p>
-        
-        <div class="hero-buttons fade-in delay-2">
-            <a href="https://script.google.com/macros/s/AKfycbzH_RcZeKN1_QjeyXo95ehigXVyi_hZAL3kNJHGfBWWBMagKvaa4zy9FzxyW3FHcb0u/exec" target="_blank" class="btn-glow secondary">
-                <i class="fa-solid fa-square-poll-vertical"></i> LVEF回答フォーム
-            </a>
-        </div>
+        <div class="full-name fade-in delay-1">Saga Association for Knowledge of <br><span class="highlight-echo">Echocardiography</span></div>
+        <p class="subtitle fade-in delay-1">心エコーの未来を、佐賀から拓く。<br>医師・技師がつながるためのラーニングハブ。</p>
     </section>
 
-    <section class="section fade-in delay-3" id="journal-club">
-        <div class="section-title"><i class="fa-solid fa-video"></i> Online Journal Club</div>
-        
-        <h3 style="text-align:center; margin-bottom:20px; font-size:1.3rem; color:white;">
-            今月のオンライン抄読会
-        </h3>
+    <div class="nav-grid fade-in delay-2">
+        <a href="journal.html" class="nav-card featured">
+            <i class="fa-solid fa-video nav-icon"></i>
+            <div class="nav-title">Online Journal Club</div>
+            <div class="nav-desc">今月の動画視聴とディスカッション</div>
+        </a>
 
-        <div class="video-wrapper">
-            <video controls playsinline preload="metadata" poster="images/4ch.png">
-                <source src="images/movie.mp4" type="video/mp4">
-                <p>お使いのブラウザは動画タグに対応していません。</p>
-            </video>
-        </div>
+        <a href="https://script.google.com/macros/s/AKfycbzH_RcZeKN1_QjeyXo95ehigXVyi_hZAL3kNJHGfBWWBMagKvaa4zy9FzxyW3FHcb0u/exec" target="_blank" class="nav-card">
+            <i class="fa-solid fa-square-poll-vertical nav-icon"></i>
+            <div class="nav-title">LVEF回答フォーム</div>
+            <div class="nav-desc">目合わせ会用入力フォーム</div>
+        </a>
 
-        <div style="text-align:center; margin: 30px 0;">
-            <a href="https://drive.google.com/drive/folders/1rwDZwNR4aGwF_JUzrZm5EmjTjWa39uWy" target="_blank" class="btn-glow">
-                <i class="fa-solid fa-lock"></i> 抄読会資料の部屋へ入室
-            </a>
-        </div>
-        
-        <p style="text-align:center; color:#cbd5e1; font-size:0.9rem; margin-top:20px; line-height:1.8;">
-            <i class="fa-solid fa-book-open"></i> Reference Article:<br>
-            <a href="https://www.ahajournals.org/doi/10.1161/JAHA.125.042875" target="_blank" style="color:var(--primary); text-decoration:underline; font-weight:bold;">
-                JAHA.125.042875 (Click to open)
-            </a>
-        </p>
-    </section>
+        <a href="https://drive.google.com/drive/folders/1Ma9YP9mtl5WAPd7nxfMdmD344eaJsha6" target="_blank" class="nav-card">
+            <i class="fa-regular fa-folder-open nav-icon"></i>
+            <div class="nav-title">Archive</div>
+            <div class="nav-desc">過去の議事録・資料はこちら</div>
+        </a>
+    </div>
 
-    <section class="section fade-in delay-3" id="schedule">
-        <div class="calendar-section">
-            <div class="section-title"><i class="fa-regular fa-calendar-check"></i> Schedule / Web Meeting</div>
-            <div class="calendar-container">
-                <iframe src="https://calendar.google.com/calendar/embed?src=ucg.saga%40gmail.com&ctz=Asia%2FTokyo&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&showTz=0" class="google-calendar" frameborder="0" scrolling="no"></iframe>
+    <section class="content-section fade-in delay-2">
+        <div class="widget-box">
+            <div class="widget-title"><i class="fa-regular fa-calendar-check"></i> Schedule</div>
+            <div class="calendar-wrapper">
+                <iframe src="https://calendar.google.com/calendar/embed?src=ucg.saga%40gmail.com&ctz=Asia%2FTokyo&showTitle=0&showNav=1&showDate=1&showPrint=0&showTabs=1&showCalendars=0&showTz=0"></iframe>
             </div>
         </div>
 
-        <div class="grid-2-col">
-            <div class="card">
-                <i class="fa-regular fa-file-pdf card-icon"></i>
-                <h3>Archive</h3>
-                <p>過去の議事録・資料アーカイブ</p>
-                <div style="margin-top:20px;">
-                    <a href="https://drive.google.com/drive/folders/1Ma9YP9mtl5WAPd7nxfMdmD344eaJsha6" target="_blank" style="color:var(--primary); font-weight:bold; display:flex; align-items:center; gap:5px;">
-                        アーカイブ一覧へ <i class="fa-solid fa-arrow-right"></i>
-                    </a>
-                </div>
+        <div class="widget-box">
+            <div class="widget-title"><i class="fa-solid fa-pen-nib"></i> Topics</div>
+            
+            <div style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:15px;">
+                <span style="font-size:0.8rem; color:var(--primary);">2025.12.18</span>
+                <div style="font-size:0.95rem; margin-bottom:5px;">17:30〜 第25回LVEF目合わせ＠saga</div>
+                <div style="font-size:0.85rem; color:#cbd5e1;">※Teamsリンクはカレンダー参照</div>
             </div>
 
-            <div class="card">
-                <i class="fa-solid fa-pen-nib card-icon"></i>
-                <h3>Topics</h3>
-                
-                <div style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:15px; margin-bottom:15px;">
-                    <span style="font-size:0.8rem; color:var(--primary);">2025.12.18</span>
-                    <div style="font-size:0.95rem; margin-bottom:5px;">17:30〜 第25回LVEF目合わせ＠saga</div>
-                    <a href="#schedule" style="font-size:0.85rem; color:#cbd5e1; display:flex; align-items:center; gap:5px; text-decoration:underline;">
-                        <i class="fa-solid fa-arrow-up"></i> Teams会議のリンクは<br>上のカレンダーからご確認ください
-                    </a>
-                </div>
-
-                <div>
-                    <span style="font-size:0.8rem; color:var(--primary);">2025.12.02</span>
-                    <a href="blog/2025-12-02-opening.html" style="font-size:0.95rem; display:block; transition:0.3s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='white'">
-                        Webサイトを開設しました。 <i class="fa-solid fa-angle-right" style="font-size:0.8em; margin-left:5px;"></i>
-                    </a>
-                </div>
+            <div>
+                <span style="font-size:0.8rem; color:var(--primary);">2025.12.02</span>
+                <a href="blog/2025-12-02-opening.html" style="font-size:0.95rem; display:block; transition:0.3s;" onmouseover="this.style.color='#38bdf8'" onmouseout="this.style.color='white'">
+                    Webサイトを開設しました。 <i class="fa-solid fa-angle-right"></i>
+                </a>
             </div>
         </div>
     </section>
 
-    <footer>
-        &copy; 2025 SAKE (Saga Association for Knowledge of Echocardiography).<br>
-        Designed for Medical Professionals.
-    </footer>
+    <footer>&copy; 2025 SAKE.</footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-
     <script>
+        // ... (v27と同じ3D心臓のJavaScriptコードをここに貼ってください) ...
+        // ※長くなるので省略していますが、先ほどまでと同じコードで動きます
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        const particlesMaterial = new THREE.PointsMaterial({
-            color: 0x38bdf8, size: 0.05, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending
-        });
+        const particlesMaterial = new THREE.PointsMaterial({ color: 0x38bdf8, size: 0.05, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
         const wireframeMaterial = new THREE.LineBasicMaterial({ color: 0x2563eb, transparent: true, opacity: 0.15 });
-
         const heartGroup = new THREE.Group();
         scene.add(heartGroup);
         heartGroup.position.set(5, -2, -5); 
         heartGroup.rotation.y = -Math.PI / 4;
         camera.position.z = 18;
-
         const loader = new THREE.GLTFLoader();
         loader.load('./heart.glb', (gltf) => {
             const loadedModel = gltf.scene;
-            loadedModel.traverse((child) => {
-                if (child.isMesh) {
-                    const wireGeom = new THREE.WireframeGeometry(child.geometry);
-                    const wireframe = new THREE.LineSegments(wireGeom, wireframeMaterial);
-                    child.add(wireframe);
-                    const points = new THREE.Points(child.geometry, particlesMaterial);
-                    child.add(points);
-                    child.material.visible = false; 
-                }
-            });
-            loadedModel.scale.set(15, 15, 15);
-            heartGroup.add(loadedModel);
-        }, undefined, (error) => {
-            createProceduralHeart();
-        });
-
-        function createProceduralHeart() {
-            const geometry = new THREE.BufferGeometry();
-            const vertices = [];
-            const numPoints = 3000;
-            for (let i = 0; i < numPoints; i++) {
-                const phi = Math.acos( -1 + ( 2 * Math.random() ) );
-                const theta = Math.sqrt( numPoints * Math.PI ) * phi;
-                let x = Math.cos(theta) * Math.sin(phi);
-                let y = Math.sin(theta) * Math.sin(phi);
-                let z = Math.cos(phi);
-                let stretch = 1.0 - (z * 0.5); 
-                x *= stretch * 1.2; y *= stretch * 0.8; z *= 1.5;
-                if (z > 0.5) { const indent = Math.abs(x) * 0.5; z -= indent * 0.5; }
-                const noise = 0.95 + Math.random() * 0.1;
-                vertices.push(x * 3 * noise, y * 3 * noise, z * 3 * noise);
-            }
-            geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-            const points = new THREE.Points(geometry, particlesMaterial);
-            points.rotation.x = -Math.PI / 2;
-            points.rotation.z = Math.PI / 10;
-            heartGroup.add(points);
-        }
-
-        const clock = new THREE.Clock(); 
-        function animate() {
-            requestAnimationFrame(animate);
-            const elapsedTime = clock.getElapsedTime(); 
-            const period = 2.0; 
-            const t = elapsedTime % period; 
-            let beat = 0;
-            if (t < 0.4) { beat = Math.sin(t * Math.PI / 0.4) * 0.15; }
-            else { beat = 0; }
-            
-            const scale = 1.0 + beat;
-            heartGroup.scale.set(scale, scale, scale);
-            heartGroup.rotation.y += 0.002;
-            renderer.render(scene, camera);
-        }
-
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        animate();
+            loadedModel.traverse((child) => { if (child.isMesh) { const wireGeom = new THREE.WireframeGeometry(child.geometry); const wireframe = new THREE.LineSegments(wireGeom, wireframeMaterial); child.add(wireframe); const points = new THREE.Points(child.geometry, particlesMaterial); child.add(points); child.material.visible = false; } });
+            loadedModel.scale.set(15, 15, 15); heartGroup.add(loadedModel);
+        }, undefined, () => { createProceduralHeart(); });
+        function createProceduralHeart() { const geometry = new THREE.BufferGeometry(); const vertices = []; const numPoints = 3000; for (let i = 0; i < numPoints; i++) { const phi = Math.acos( -1 + ( 2 * Math.random() ) ); const theta = Math.sqrt( numPoints * Math.PI ) * phi; let x = Math.cos(theta) * Math.sin(phi); let y = Math.sin(theta) * Math.sin(phi); let z = Math.cos(phi); let stretch = 1.0 - (z * 0.5); x *= stretch * 1.2; y *= stretch * 0.8; z *= 1.5; if (z > 0.5) { const indent = Math.abs(x) * 0.5; z -= indent * 0.5; } const noise = 0.95 + Math.random() * 0.1; vertices.push(x * 3 * noise, y * 3 * noise, z * 3 * noise); } geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3)); const points = new THREE.Points(geometry, particlesMaterial); points.rotation.x = -Math.PI / 2; points.rotation.z = Math.PI / 10; heartGroup.add(points); }
+        const clock = new THREE.Clock(); function animate() { requestAnimationFrame(animate); const elapsedTime = clock.getElapsedTime(); const period = 2.0; const t = elapsedTime % period; let beat = 0; if (t < 0.4) { beat = Math.sin(t * Math.PI / 0.4) * 0.15; } else { beat = 0; } const scale = 1.0 + beat; heartGroup.scale.set(scale, scale, scale); heartGroup.rotation.y += 0.002; renderer.render(scene, camera); }
+        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); }); animate();
     </script>
-
 </body>
 </html>
